@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Text Heart — I Love You</title>
+<style>
+  :root{
+    --bg:#6196f857;
+    --text-pink:#ffc0d8;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    background:var(--bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: "Courier New", Courier, monospace;
+    background-color: #6196f857;
+  }
+
+  .canvas{
+    width:80vw;
+    height:80vh;
+  }
+
+  svg{
+    width:100%;
+    height:100%;
+    overflow:visible;
+  }
+
+  /* style for the repeated text layers */
+  .layer text {
+    font-size:6px;               /* adjust size */
+    letter-spacing:1px;
+    fill: var(--text-pink);
+    font-weight:700;
+    paint-order:stroke fill;
+    text-anchor:middle;
+  }
+
+  /* slightly darker / offset layers for depth */
+  .layer--1 text { fill: rgba(255, 0, 0, 0.15); transform: translate(2px,2px); }
+  .layer--2 text { fill: rgba(255, 0, 0,0.28); transform: translate(1px,1px); }
+  .layer--3 text { fill: rgba(255, 0, 0,0.55); }
+  .layer--4 text { fill: rgba(255, 0, 0,0.9); }
+
+  /* make the top layer a little larger and brighter */
+  .top text { font-size:7px; font-weight:800; fill: #ffd6e8; }
+
+  /* hide default outlines */
+  svg { display:block; }
+  
+  .center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <svg viewBox="0 0 200 180" preserveAspectRatio="xMidYMid meet">
+      <!-- Heart path (centered and scaled to viewBox) -->
+      <defs>
+        <path id="heart" d="
+            M100 30
+            C60 -20, -20 65, 100 140
+            C220 85, 160 -20, 100 30
+            Z
+        " />
+      </defs>
+
+      <!-- Multiple text copies along the same path to create a thick edge -->
+      <!-- Each <textPath> is filled with repeated "I Love You" to cover the whole path -->
+      <g class="layer layer--1">
+        <text>
+          <textPath href="#heart" startOffset="6%">
+            I Love You — I Love You — I Love You — I Love You — I Love You — I Love You —
+            I Love You — I Love You — I Love You — I Love You — I Love You — 
+          </textPath>
+        </text>
+      </g>
+      <text style="left:">
+        You're so beautiful
+      </text>
+      <g class="layer layer--2">
+        <text>
+          <textPath href="#heart" startOffset="9%">
+            I Love You — I Love You — I Love You — I Love You — I Love You — I Love You —
+            I Love You — I Love You — I Love You — I Love You — I Love You —
+          </textPath>
+        </text>
+      </g>
+
+      <g class="layer layer--3">
+        <text>
+          <textPath href="#heart" startOffset="12%">
+            I Love You — I Love You — I Love You — I Love You — I Love You — I Love You —
+            I Love You — I Love You — I Love You — I Love You — I Love You —
+          </textPath>
+        </text>
+      </g>
+
+      <g class="layer layer--4 top">
+        <text>
+          <textPath href="#heart" startOffset="15%">
+            I Love You — I Love You — I Love You — I Love You — I Love You — I Love You —
+            I Love You — I Love You — I Love You — I Love You —
+          </textPath>
+        </text>
+      </g>
+
+      <!-- optional: a faint inner outline (dark) to increase contrast like your photo -->
+      <!--<path d=M100 30
+          C100 10, 60 10, 50 40
+          C35 70, 80 110, 100 140
+          C120 110, 165 70, 150 40
+          C140 10, 100 10, 100 30 Z"
+            fill="none" stroke="rgba(255,192,216,0.06)" stroke-width="1"/>-->
+    </svg>
+  
+  <div class="center" style="margin-top: -10vh; padding-bottom: 100px; border-bottom: 100px; margin-bottom: 100px;">
+  <h1 style="
+    letter-spacing:1px;
+    fill: var(--text-pink);
+    font-weight:400;
+    paint-order:fill;
+    font-size:3vw; font-weight:800; color: rgb(18, 134, 24);
+    align-items: center;">
+    I wish I was beside you right now
+  </h1>
+  </div>
+  </div>
+
+
+<script>
+/* Optional: gentle animation that scrolls the text along the path.
+   If you prefer a static image, just delete or comment-out this script.
+*/
+(function(){
+  const fps = 30;
+  const speed = 0.02; // lower is slower
+  const layers = document.querySelectorAll('textPath');
+
+  function tick(){
+    layers.forEach((tp, i) => {
+      // read current offset in percent and increment
+      const current = parseFloat(tp.getAttribute('data-off') || tp.getAttribute('startOffset') || '0') || 0;
+      const next = (current + speed * (1 + i*0.2)) % 100;
+      tp.setAttribute('startOffset', next + '%');
+      tp.setAttribute('data-off', next);
+    });
+  }
+
+  setInterval(tick, 1000 / fps);
+})();
+</script>
+</body>
+</html>
